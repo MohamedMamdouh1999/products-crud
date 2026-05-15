@@ -1,4 +1,5 @@
 import { v7 as uuid } from "uuid";
+
 import type { ICategory } from "../interfaces/category";
 
 export const categories: ICategory[] = [

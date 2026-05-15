@@ -1,4 +1,5 @@
 import { v7 as uuid } from "uuid";
+
 import type { IProduct } from "../interfaces/product";
 
 export const products: IProduct[] = [
@@ -69,7 +70,7 @@ export const products: IProduct[] = [
     imageURL:
       "https://images.unsplash.com/photo-1552831388-6a0b3575b32a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80",
     price: "1500",
-    colors: [],
+    colors: ["#A31ACB", "#3C2A21", "#1F8A70", "#820000", "#FF0032"],
     category: {
       id: uuid(),
       name: "PC Desktop",
@@ -144,7 +145,7 @@ export const products: IProduct[] = [
     imageURL:
       "https://images.unsplash.com/photo-1552831388-6a0b3575b32a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80",
     price: "1500",
-    colors: [],
+    colors: ["#A31ACB", "#3C2A21", "#1F8A70", "#820000", "#FF0032"],
     category: {
       id: uuid(),
       name: "PC Desktop",
