@@ -34,7 +34,7 @@ const App = () => {
     };
     const [product, setProduct] = useState<IProduct>(defaultProduct);
     const [productsData, setProductsData] = useState<IProduct[]>(products);
-    const [selected, setSelected] = useState(categories[3]);
+    const [selectedCategory, setSelectedCategory] = useState(categories[0]);
     const [tempColors, setTempColors] = useState<string[]>([]);
     const [errors, setErrors] = useState({
         title: "",
@@ -43,11 +43,14 @@ const App = () => {
         price: "",
         colors: ""
     });
+    const [isEditing, setIsEditing] = useState(false);
     const [isOpenModal, setIsOpenModal] = useState(false);
     const openModal = () => setIsOpenModal(true);
     const closeModal = () => {
         setIsOpenModal(false);
+        setIsEditing(false);
         setProduct(defaultProduct);
+        setSelectedCategory(categories[0]);
         setTempColors([]);
         setErrors({
             title: "",
@@ -90,17 +93,42 @@ const App = () => {
         const newProduct = {
             ...product,
             id: uuid(),
-            category: selected,
+            category: selectedCategory,
             colors: tempColors
         };
-        setProductsData([newProduct, ...productsData]);
+        if (isEditing) {
+            setProductsData(
+                productsData.map(item => {
+                    if (item.id === product.id) {
+                        return newProduct;
+                    } else {
+                        return item;
+                    }
+                })
+            );
+        } else {
+            setProductsData([newProduct, ...productsData]);
+        }
+
         closeModal();
     };
+    const onEditHandler = (id: string) => {
+        const selectedProduct = productsData.find(product => product.id === id);
+        if (selectedProduct) {
+            setIsEditing(true);
+            setProduct(selectedProduct);
+            setSelectedCategory(selectedProduct.category);
+            setTempColors(selectedProduct.colors);
+            openModal();
+        } else {
+            closeModal();
+            setIsEditing(false);
+        }
+    };
+    const onDeleteHandler = (id: string) => setProductsData(productsData.filter(product => product.id !== id));
 
     // Renders
-    const productsList = productsData.map((product) => (
-        <Product key={product.id} {...product} />
-    ));
+    const productsList = productsData.map(product => <Product key={product.id} product={product} onEditHandler={onEditHandler} onDeleteHandler={onDeleteHandler} />);
     const inputsList = formInputs.map((input) => (
         <div key={input.id} className="flex flex-col gap-y-1">
             <label htmlFor={input.id}>{input.label}</label>
@@ -129,55 +157,23 @@ const App = () => {
 
     return (
         <main className="container mx-auto p-5 flex flex-col gap-y-5">
-            <Button
-                className="bg-indigo-800 hover:bg-indigo-900 mx-auto"
-                width="w-fit"
-                onClick={openModal}
-            >
-                Add a new product
-            </Button>
-            <Modal
-                isOpen={isOpenModal}
-                close={closeModal}
-                title="Add a new product"
-            >
-                <form
-                    onSubmit={onSubmitHandler}
-                    className="flex flex-col gap-y-3"
-                >
+            <Button width="w-fit" className="bg-indigo-800 hover:bg-indigo-900 mx-auto" onClick={openModal}>Add a new product</Button>
+            <Modal isOpen={isOpenModal} close={closeModal} title={isEditing ? "Edit product" : "Add a new product"}>
+                <form onSubmit={onSubmitHandler} className="flex flex-col gap-y-3">
                     {inputsList}
-                    <Select selected={selected} setSelected={setSelected} />
+                    <Select selected={selectedCategory} setSelected={setSelectedCategory} />
                     <div className="space-y-1">
-                        <div className="flex flex-wrap items-center gap-1">
-                            {colorsList}
-                        </div>
+                        <div className="flex flex-wrap items-center gap-1">{colorsList}</div>
                         <Error message={errors.colors} />
                     </div>
-                    {tempColors.length > 0 && 
-                        <div className="flex flex-wrap items-center gap-1">
-                            {tempColorsList}
-                        </div>
-                    }
+                    {tempColors.length > 0 && <div className="flex flex-wrap items-center gap-1">{tempColorsList}</div>}
                     <div className="flex items-center gap-x-2">
-                        <Button
-                            type="submit"
-                            className="bg-violet-800 hover:bg-violet-900"
-                        >
-                            Save
-                        </Button>
-                        <Button
-                            type="reset"
-                            onClick={closeModal}
-                            className="bg-red-700 hover:bg-red-800"
-                        >
-                            Cancel
-                        </Button>
+                        <Button type="submit" className="bg-violet-800 hover:bg-violet-900">{isEditing ? "Edit" : "Save"}</Button>
+                        <Button onClick={closeModal} type="reset" className="bg-red-700 hover:bg-red-800">Cancel</Button>
                     </div>
                 </form>
             </Modal>
-            <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {productsList}
-            </section>
+            <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">{productsList}</section>
         </main>
     );
 };
