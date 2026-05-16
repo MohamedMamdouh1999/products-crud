@@ -18,7 +18,7 @@ const Select = ({ selected, setSelected }: IProps) => {
     <Listbox value={selected} onChange={setSelected}>
       <Label>Category</Label>
       <div className="relative">
-        <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-md bg-white py-2 pr-2 pl-3 text-left outline-1 -outline-offset-1 outline-white/10 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-500 sm:text-sm/6">
+        <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-md bg-white py-2 pr-2 pl-3 text-left border border-gray-400 outline-1 -outline-offset-1 outline-white/10 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-500 sm:text-sm/6">
           <span className="col-start-1 row-start-1 flex items-center gap-3 pr-6">
             <img
               alt={selected.name}
@@ -34,7 +34,7 @@ const Select = ({ selected, setSelected }: IProps) => {
         </ListboxButton>
         <ListboxOptions
           transition
-          className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base outline-1 -outline-offset-1 outline-white/10 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
+          className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base border border-gray-400 outline-1 -outline-offset-1 outline-white/10 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
         >
           {categories.map(category => (
             <ListboxOption
