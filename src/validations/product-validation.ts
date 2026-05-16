@@ -1,9 +1,10 @@
-export const productValidation = (product: { title: string, description: string, imageURL: string, price: string }) => {
+export const productValidation = (product: { title: string, description: string, imageURL: string, price: string, colors: string[] }) => {
     const errors = {
         title: "",
         description: "",
         imageURL: "",
-        price: ""
+        price: "",
+        colors: ""
     };
 
     const validURL = /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$/i.test(product.imageURL);
@@ -19,6 +20,9 @@ export const productValidation = (product: { title: string, description: string,
     }
     if (!product.price.trim() || isNaN(Number(product.price))) {
         errors.price = "Price is invalid";
+    }
+    if (product.colors.length < 1) {
+        errors.colors = "At least one color is required";
     }
 
     return errors;

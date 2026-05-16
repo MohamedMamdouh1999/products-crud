@@ -3,6 +3,7 @@ import { v7 as uuid } from "uuid";
 
 import { products } from "./data/products";
 import { formInputs } from "./data/form-inputs";
+import { categories } from "./data/categories";
 import { colors } from "./data/colors";
 
 import Product from "./components/Product";
@@ -10,6 +11,7 @@ import Button from "./components/ui/Button";
 import Modal from "./components/ui/Modal";
 import Input from "./components/ui/Input";
 import Error from "./components/ui/Error";
+import Select from "./components/ui/Select";
 import CircleColor from "./components/CircleColor";
 
 import type { IProduct } from "./interfaces/product";
@@ -32,12 +34,14 @@ const App = () => {
     };
     const [product, setProduct] = useState<IProduct>(defaultProduct);
     const [productsData, setProductsData] = useState<IProduct[]>(products);
+    const [selected, setSelected] = useState(categories[3]);
     const [tempColors, setTempColors] = useState<string[]>([]);
     const [errors, setErrors] = useState({
         title: "",
         description: "",
         imageURL: "",
         price: "",
+        colors: ""
     });
     const [isOpenModal, setIsOpenModal] = useState(false);
     const openModal = () => setIsOpenModal(true);
@@ -50,6 +54,7 @@ const App = () => {
             description: "",
             imageURL: "",
             price: "",
+            colors: ""
         });
     };
 
@@ -58,11 +63,11 @@ const App = () => {
         const { name, value } = event.target;
         setProduct({
             ...product,
-            [name]: value,
+            [name]: value
         });
         setErrors({
             ...errors,
-            [name]: "",
+            [name]: ""
         });
     };
     const onSubmitHandler = (event: React.SubmitEvent<HTMLFormElement>) => {
@@ -74,6 +79,7 @@ const App = () => {
             description,
             imageURL,
             price,
+            colors: tempColors
         });
         const hasErrors = Object.values(errors).some((error) => error !== "");
         if (hasErrors) {
@@ -84,6 +90,7 @@ const App = () => {
         const newProduct = {
             ...product,
             id: uuid(),
+            category: selected,
             colors: tempColors
         };
         setProductsData([newProduct, ...productsData]);
@@ -110,11 +117,12 @@ const App = () => {
     ));
     const colorsList = colors.map((color) => (
         <CircleColor key={color} color={color} onClick={() => {
-          if (tempColors.includes(color)) {
-            setTempColors(tempColors.filter((c) => c !== color));
-          } else {
-            setTempColors([...tempColors, color]);
-          }
+            if (tempColors.includes(color)) {
+                setTempColors(tempColors.filter((c) => c !== color));
+            } else {
+                setTempColors([...tempColors, color]);
+                setErrors({ ...errors, colors: "" });
+            }
         }} />
     ));
     const tempColorsList = tempColors.map(color => <span key={color} style={{backgroundColor: color}} className="rounded-md text-white p-1">{color}</span>);
@@ -138,12 +146,18 @@ const App = () => {
                     className="flex flex-col gap-y-3"
                 >
                     {inputsList}
-                    <div className="flex flex-wrap items-center gap-1">
-                        {colorsList}
+                    <Select selected={selected} setSelected={setSelected} />
+                    <div className="space-y-1">
+                        <div className="flex flex-wrap items-center gap-1">
+                            {colorsList}
+                        </div>
+                        <Error message={errors.colors} />
                     </div>
-                    <div className="flex flex-wrap items-center gap-1">
-                        {tempColorsList}
-                    </div>
+                    {tempColors.length > 0 && 
+                        <div className="flex flex-wrap items-center gap-1">
+                            {tempColorsList}
+                        </div>
+                    }
                     <div className="flex items-center gap-x-2">
                         <Button
                             type="submit"
