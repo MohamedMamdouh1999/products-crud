@@ -5,6 +5,7 @@ import Button from "./ui/Button";
 import type { IProduct } from "../interfaces/product";
 
 import { textSlicer } from "../utils/text-slicer";
+import { numberWithCommas } from "../utils/number-with-commas";
 
 interface IProps {
     product: IProduct;
@@ -26,7 +27,7 @@ const Product = ({ product, onEditHandler, onDeleteHandler }: IProps) => {
             </div>
             <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="text-lg font-semibold text-indigo-900">
-                    ${product.price}
+                    ${numberWithCommas(product.price)}
                 </span>
                 <div className="flex items-center gap-x-2">
                     {product.category.imageURL && <Image className="rounded-full w-8 h-8 object-cover object-center" src={product.category.imageURL} alt={product.category.name} />}

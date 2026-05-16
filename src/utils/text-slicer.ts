@@ -10,11 +10,11 @@
  *
  * @example
  * textSlicer("Hello World", 5);
- * // Returns: "Hello..."
+ * Returns: "Hello..."
  *
  * @example
  * textSlicer("Short text", 20);
- * // Returns: "Short text"
+ * Returns: "Short text"
  */
 
 export const textSlicer = (text: string, limit: number = 100) => {
